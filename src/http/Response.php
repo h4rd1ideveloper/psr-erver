@@ -14,8 +14,6 @@ use Psr\Http\Message\StreamInterface;
  */
 class Response implements ResponseInterface
 {
-
-
     /** Map of standard HTTP status code/reason phrases */
     private const PHRASES = array(
         100 => 'Continue',
@@ -105,8 +103,7 @@ class Response implements ResponseInterface
         $body = null,
         string $version = '1.1',
         string $reason = null
-    )
-    {
+    ) {
         $this->assertStatusCodeRange($status);
 
         $this->statusCode = $status;
@@ -119,7 +116,7 @@ class Response implements ResponseInterface
         if ($reason == '' && isset(self::PHRASES[$this->statusCode])) {
             $this->reasonPhrase = self::PHRASES[$this->statusCode];
         } else {
-            $this->reasonPhrase = (string)$reason;
+            $this->reasonPhrase = (string) $reason;
         }
 
         $this->protocol = $version;
@@ -140,7 +137,7 @@ class Response implements ResponseInterface
             if (is_int($header)) {
                 // Numeric array keys are converted to int by PHP but having a header name '123' is not forbidden by the spec
                 // and also allowed in withHeader(). So we need to cast it to string again for the following assertion to pass.
-                $header = (string)$header;
+                $header = (string) $header;
             }
             $this->assertHeader($header);
             $value = $this->normalizeHeaderValue($value);
@@ -153,7 +150,6 @@ class Response implements ResponseInterface
                 $this->headers[$header] = $value;
             }
         }
-        $this->applyHeaders();
     }
 
     private function assertHeader($header)
@@ -207,7 +203,7 @@ class Response implements ResponseInterface
                 ));
             }
 
-            return trim((string)$value, " \t");
+            return trim((string) $value, " \t");
         }, $values);
     }
 
@@ -215,7 +211,7 @@ class Response implements ResponseInterface
     {
         if (count($this->headers)) {
             foreach ($this->headers as $key => $value) {
-                Helpers::setHeader(sprintf("%s:%s",$key, $this->getHeaderLine($key)));
+                Helpers::setHeader(sprintf("%s:%s", $key, $this->getHeaderLine($key)));
             }
         }
     }
@@ -233,7 +229,7 @@ class Response implements ResponseInterface
     public function withStatus($code, $reasonPhrase = '')
     {
         $this->assertStatusCodeIsInteger($code);
-        $code = (int)$code;
+        $code = (int) $code;
         $this->assertStatusCodeRange($code);
 
         $new = clone $this;
@@ -306,7 +302,6 @@ class Response implements ResponseInterface
         }
         $new->headerNames[$normalized] = $header;
         $new->headers[$header] = $value;
-        $new->applyHeaders();
         return $new;
     }
 
@@ -324,7 +319,6 @@ class Response implements ResponseInterface
             $new->headerNames[$normalized] = $header;
             $new->headers[$header] = $value;
         }
-        $new->applyHeaders();
         return $new;
     }
 
@@ -340,7 +334,6 @@ class Response implements ResponseInterface
 
         $new = clone $this;
         unset($new->headers[$header], $new->headerNames[$normalized]);
-        $new->applyHeaders();
         return $new;
     }
 
@@ -349,6 +342,10 @@ class Response implements ResponseInterface
         if (!$this->stream) {
             $this->stream = stream_for('');
         }
+        /**
+         * set Headers on Expose body content of the response 
+         */
+        $this->applyHeaders();
         return $this->stream;
     }
 

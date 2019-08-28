@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "809d8460b09d2db1fb712dd4fadffbbc",
+    "content-hash": "b89504b3dc222e43184f91391bab864e",
     "packages": [
         {
             "name": "psr/http-factory",
@@ -1766,9 +1766,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.1.0",
-        "ext-json": "*",
-        "ext-pdo": "*"
+        "php": ">=5.3.0"
     },
     "platform-dev": []
 }

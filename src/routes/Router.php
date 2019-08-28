@@ -120,13 +120,19 @@ class Router
     public function run()
     {
         $method = strtolower($_SERVER['REQUEST_METHOD']) ? strtolower($_SERVER['REQUEST_METHOD']) : 'get';
-        $route = isset($_SERVER['REQUEST_URI']) ? parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) : '/';//$_SERVER['REQUEST_URI']
-        !isset($this->routes[$method]) && die(//Debugger
-        print_r(['405 Method not allowed', $method, parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)])
-        );
-        !isset($this->routes[$method][$route]) && die(//Debugger
-        print_r(['404 Error', $method, sprintf("'%s'", parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))])
-        );
+        $route = isset($_SERVER['REQUEST_URI']) ? parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) : '/'; //$_SERVER['REQUEST_URI']
+        //$route = str_replace('/ever', "", $route);
+        /*
+        if (strlen($toSearch[0]) === 0) {
+            $route = str_replace("/" . $toSearch[1], "", $route);
+        } else {
+            $route = str_replace("/" . $toSearch[0], "", $route);
+        }*/
+        var_dump($_SERVER);
+        !isset($this->routes[$method]) && die( //Debugger
+            print_r(['405 Method not allowed', $method, $route]));
+        !isset($this->routes[$method][$route]) && die( //Debugger
+            print_r(['404 Error', $method, $route]));
         self::$params = $this->getParams($method);
         self::$files = $this->getFiles();
         /**
@@ -137,7 +143,7 @@ class Router
             Helpers::toJson(
                 array_merge(
                     array_merge($_GET, $_POST),
-                    $this->getRequestBody()??array()
+                    $this->getRequestBody() ?? array()
                 )
             )
         );
