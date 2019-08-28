@@ -121,14 +121,6 @@ class Router
     {
         $method = strtolower($_SERVER['REQUEST_METHOD']) ? strtolower($_SERVER['REQUEST_METHOD']) : 'get';
         $route = isset($_SERVER['REQUEST_URI']) ? parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) : '/'; //$_SERVER['REQUEST_URI']
-        //$route = str_replace('/ever', "", $route);
-        /*
-        if (strlen($toSearch[0]) === 0) {
-            $route = str_replace("/" . $toSearch[1], "", $route);
-        } else {
-            $route = str_replace("/" . $toSearch[0], "", $route);
-        }*/
-        var_dump($_SERVER);
         !isset($this->routes[$method]) && die( //Debugger
             print_r(['405 Method not allowed', $method, $route]));
         !isset($this->routes[$method][$route]) && die( //Debugger
