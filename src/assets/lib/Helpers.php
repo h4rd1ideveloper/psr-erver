@@ -239,7 +239,7 @@ class Helpers
     }
     /**
      * @param $data
-     * @return mixed
+     * @return array
      */
     public static function jsonToArray($data)
     {

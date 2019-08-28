@@ -7,7 +7,11 @@ namespace App\routes;
 
 use App\assets\lib\Helpers;
 use App\controller\AppController;
+use App\http\Request;
+use http\Env\Response;
 use http\Exception\InvalidArgumentException;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Setup Object routes closures

@@ -3,6 +3,9 @@
 namespace App\routes;
 
 use App\assets\lib\Helpers;
+use App\http\Request;
+use App\http\Response;
+use App\http\Stream;
 use Closure;
 
 /**
@@ -15,8 +18,6 @@ use Closure;
  */
 class Router
 {
-    /*  HTTP Objects */
-    private static $body = array();
     /**
      * @var array
      */
@@ -29,32 +30,6 @@ class Router
      * @var array
      */
     private $routes = array();
-
-    /**
-     *  Getter [$_FILES]
-     * @return array
-     */
-    public static function getRequestFile()
-    {
-        return self::$files;
-    }
-
-    /**
-     *  Getter  [$_GET | $_POST]
-     * @return array
-     */
-    public static function getRequest()
-    {
-        return self::$params;
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function getRequestBody()
-    {
-        return Helpers::jsonToArray(file_get_contents("php://input"));
-    }
 
     /**
      * @return mixed
@@ -75,6 +50,24 @@ class Router
     public static function serverObject()
     {
         return $_SERVER;
+    }
+
+    /**
+     *  Getter [$_FILES]
+     * @return array
+     */
+    public static function getRequestFile()
+    {
+        return self::$files;
+    }
+
+    /**
+     *  Getter  [$_GET | $_POST]
+     * @return array
+     */
+    public static function getRequest()
+    {
+        return self::$params;
     }
 
     /**
@@ -136,8 +129,31 @@ class Router
         );
         self::$params = $this->getParams($method);
         self::$files = $this->getFiles();
-        //self::$body = self::getRequestBody();
-        die($this->routes[$method][$route]());
+        /**
+         * Create a body stream by Method
+         */
+        $body = new Stream(fopen('php://temp', 'r+'));
+        $body->write(
+            Helpers::toJson(
+                array_merge(
+                    array_merge($_GET, $_POST),
+                    $this->getRequestBody()??array()
+                )
+            )
+        );
+        /**
+         * Put into body request every content provided
+         */
+        /**
+         * Request Factory
+         */
+        $request = new Request($method, $route, array(), $body);
+        //echo $request->getBody() ;
+        /**
+         * Response Factory
+         */
+        $response = new Response();
+        die($this->routes[$method][$route]($request, $response));
     }
 
     /**
@@ -157,5 +173,13 @@ class Router
     private function getFiles()
     {
         return $_FILES;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getRequestBody()
+    {
+        return Helpers::jsonToArray(file_get_contents("php://input"));
     }
 }
