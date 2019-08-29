@@ -6,6 +6,7 @@
       "email": "policarpo@ice.ufjf.br"
     }
   ],
+  "description": "PSR-SERVER and GOOD PRACTICES",
   "scripts": {
     "start-dev": "php -S localhost:8080 -t ./",
     "test": "vendor/bin/phpunit"

@@ -20,6 +20,7 @@ $Dispatch = new Dispatch();
 /**
  * Declare routes with closures her
  */
+
 $app->get('/', function (Request $req, Response $res) {
   $dados = Helpers::jsonToArray($req->getBody());
   $body = $res->getBody();
@@ -87,8 +88,8 @@ $app->get('/', function (Request $req, Response $res) {
               </body>
             </html>
             ',
-      $dados['title'],
-      $dados['title']
+      $dados['title'] ?? 'ola mundo',
+      $dados['title'] ?? 'ola mundo'
     )
   );
   return $res->withBody($body)
